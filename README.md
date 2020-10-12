@@ -22,4 +22,4 @@ For run this sample is required:
 
 - A valid Leaf API access. Register here: https://withleaf.io/registration/
 - Correclty processed files in Leaf API. You can use the sample that is added to every new access: https://leaf-agriculture.github.io/docs/docs/quickstart#get-all-sample-operation-files
-- A Spark Cluster installed: 
+- It is not necessary to have a cluster, it will run in local mode.
