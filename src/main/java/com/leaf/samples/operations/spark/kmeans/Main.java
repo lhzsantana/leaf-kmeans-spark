@@ -42,7 +42,7 @@ public class Main {
 
     public static void main(String [] args) throws IOException, InterruptedException {
 
-        com.leaf.samples.operations.spark.kmeans.Main main = new com.leaf.samples.operations.spark.kmeans.Main();
+        Main main = new Main();
 
         String token = main.authenticate();
 
@@ -59,7 +59,7 @@ public class Main {
                 System.out.println(center);
             }
 
-            Dataset<Row> predictions = main.runPredictions(model, featurized);
+            Dataset<Row> predictions = main.runPredictions(model, featurized).drop("features");
 
             predictions.write().json("output-"+operation.getId()+".json");
         }
@@ -89,11 +89,10 @@ public class Main {
 
     private Dataset<Row> featurize(Dataset<Row> raw){
 
-        Dataset<Row> properties = raw.select(
-            raw.col("geometry.coordinates"),
-            raw.col("properties.yieldVolume"),
-            raw.col("properties.wetMass"),
-            raw.col("properties.moisture"));
+        Dataset<Row> properties = raw
+            .withColumn("yieldVolume", raw.col("properties.yieldVolume"))
+            .withColumn("wetMass", raw.col("properties.wetMass"))
+            .withColumn("moisture", raw.col("properties.moisture"));
 
         properties.printSchema();
 
