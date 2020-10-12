@@ -8,10 +8,10 @@ import com.leaf.samples.operations.spark.kmeans.models.Token;
 import org.apache.spark.ml.clustering.KMeans;
 import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.feature.FeatureHasher;
-import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,16 +52,17 @@ public class Main {
 
             KMeansModel model = main.calculateKMeans(featurized);
 
-            // Shows the result.
-            Vector[] centers = model.clusterCenters();
-            System.out.println("Cluster Centers: ");
-            for (Vector center: centers) {
-                System.out.println(center);
-            }
+            Dataset<Row> predictions = main.runPredictions(model, featurized)
+                .drop("features")
+                .drop("yieldVolume")
+                .drop("moisture")
+                .drop("wetMass");
 
-            Dataset<Row> predictions = main.runPredictions(model, featurized).drop("features");
+            Dataset<Row> results =  predictions
+                .withColumn("properties", functions.struct("prediction", predictions.col("prediction").toString())).drop("prediction");
 
-            predictions.write().json("output-"+operation.getId()+".json");
+
+            results.write().json("output-"+operation.getId()+".json");
         }
     }
 
