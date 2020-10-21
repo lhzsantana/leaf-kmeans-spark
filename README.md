@@ -8,7 +8,7 @@ This repository is an example showing how we can use Leaf API's to group areas a
 
 # Steps
 
-The code will performe the following steps:
+The code will perform the following steps:
 
 1. Connect to Leaf API
 2. Will query for all the files in the operations endpoint
