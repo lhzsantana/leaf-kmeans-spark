@@ -71,9 +71,7 @@ public class Main {
         Dataset<Row> predictions = model.transform(featurized);
 
         predictions.show(100);
-
-        System.out.println("----------------");
-
+        
         return predictions;
     }
 
